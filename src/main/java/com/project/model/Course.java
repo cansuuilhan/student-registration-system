@@ -1,11 +1,21 @@
 package com.project.model;
 
 public class Course {
+
     private String courseId;
     private String courseName;
     private int credit;
     private String instructorName;
 
+    // 3 parametreli constructor (Main.java’nın istediği)
+    public Course(String courseId, String courseName, int credit) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.credit = credit;
+        this.instructorName = null; // Eğitmen yoksa boş kalabilir
+    }
+
+    // Eğer 4 parametreli constructor kullanıyorsan bunu da tutabilirsin
     public Course(String courseId, String courseName, int credit, String instructorName) {
         this.courseId = courseId;
         this.courseName = courseName;
@@ -31,6 +41,6 @@ public class Course {
 
     @Override
     public String toString() {
-        return courseId + " - " + courseName + " (" + credit + " credits, Instructor: " + instructorName + ")";
+        return courseId + " - " + courseName + " (" + credit + " credits)";
     }
 }
