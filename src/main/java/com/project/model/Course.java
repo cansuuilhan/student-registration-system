@@ -7,15 +7,13 @@ public class Course {
     private int credit;
     private String instructorName;
 
-    // 3 parametreli constructor (Main.java’nın istediği)
     public Course(String courseId, String courseName, int credit) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.credit = credit;
-        this.instructorName = null; // Eğitmen yoksa boş kalabilir
+        this.instructorName = null;
     }
 
-    // Eğer 4 parametreli constructor kullanıyorsan bunu da tutabilirsin
     public Course(String courseId, String courseName, int credit, String instructorName) {
         this.courseId = courseId;
         this.courseName = courseName;
