@@ -1,33 +1,42 @@
 package com.project.service;
 
-import com.project.model.CourseSection;
+import com.project.model.Course;
+import com.project.model.Registration;
 import com.project.model.Student;
 
-/**
- * RegistrationService, öğrencilerin derslere
- * kayıt işlemlerini yöneten servis sınıfıdır.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class RegistrationService {
 
-    public boolean register(Student student, CourseSection section) {
+    private List<Registration> registrations;
 
-        // Aynı derse tekrar kayıt engeli
-        if (student.isAlreadyRegistered(section)) {
-            System.out.println("Bu derse zaten kayıtlısınız.");
+    public RegistrationService() {
+        this.registrations = new ArrayList<>();
+    }
+
+    public boolean register(Student student, Course course) {
+        if (isAlreadyRegistered(student, course)) {
+            System.out.println("Öğrenci bu derse zaten kayıtlı.");
             return false;
         }
 
-        // Kontenjan kontrolü
-        if (section.isFull()) {
-            System.out.println("Ders kontenjanı dolu.");
-            return false;
-        }
-
-        // Kayıt işlemi
-        section.enrollStudent(student);
-        student.addCourse(section);
-
-        System.out.println("Kayıt başarılı.");
+        Registration registration = new Registration(student, course);
+        registrations.add(registration);
         return true;
+    }
+
+    private boolean isAlreadyRegistered(Student student, Course course) {
+        for (Registration r : registrations) {
+            if (r.getStudent().getId().equals(student.getId())
+                    && r.getCourse().getCourseId().equals(course.getCourseId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Registration> getAllRegistrations() {
+        return registrations;
     }
 }

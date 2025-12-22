@@ -4,7 +4,7 @@ import com.project.model.Course;
 import com.project.model.GraduateStudent;
 import com.project.model.Student;
 import com.project.model.Instructor;
-import com.project.model.Registration;
+import com.project.service.RegistrationService;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,10 +19,14 @@ public class Main {
         Course c1 = new Course("CE101", "Nesne Tabanlı Programlama", 4);
 
         // Eğitmen
-        Instructor ins = new Instructor("3001", "Ersin Göse", "CE");
+        Instructor ins = new Instructor("3001", "Tuğberk Kocatekin", "CE");
 
-        // Kayıt oluştur
-        Registration r1 = new Registration(s1, c1);
+        // RegistrationService
+        RegistrationService service = new RegistrationService();
+
+        // Kayıt işlemleri (service üzerinden)
+        service.register(s1, c1);
+        service.register(s1, c1); // aynı ders, ikinci kayıt engellenmeli
 
         System.out.println("Normal öğrenci:");
         System.out.println(s1);
@@ -37,7 +41,7 @@ public class Main {
         System.out.println("\nEğitmen bilgisi:");
         System.out.println(ins);
 
-        System.out.println("\nKayıt bilgisi:");
-        System.out.println(r1);
+        System.out.println("\nKayıtlar:");
+        service.getAllRegistrations().forEach(System.out::println);
     }
 }
