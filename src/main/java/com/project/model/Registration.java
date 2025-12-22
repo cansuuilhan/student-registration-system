@@ -39,6 +39,6 @@ public class Registration {
     public String toString() {
         // HATALI: course.getTitle()
         // DOĞRUSU: course.getCourseName()
-        return student.getName() + " → " + course.getCourseName() + " (" + registrationDate + ")";
+        return student.getName() + " -> " + course.getCourseName() + " (" + registrationDate + ")";
     }
 }
