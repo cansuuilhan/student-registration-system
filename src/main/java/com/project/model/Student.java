@@ -1,9 +1,12 @@
 package com.project.model;
 
+import com.project.service.RegistrationService;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class Student {
+public class Student implements Registrable {
 
     private String id;
     private String name;
@@ -31,18 +34,78 @@ public class Student {
         return department;
     }
 
-    // Yeni ders ekleme
+    /**
+     * Base tuition (GraduateStudent bunu override eder)
+     */
+    public double calculateTuition() {
+        return 2000;
+    }
+
+    // Yeni şube ekleme
     public void addCourse(CourseSection section) {
         registeredCourses.add(section);
     }
 
-    // Daha önce kayıtlı mı kontrolü
-    public boolean isAlreadyRegistered(CourseSection section) {
+    // Şube kaldırma (drop için gerekli)
+    public void removeCourse(CourseSection section) {
+        registeredCourses.remove(section);
+    }
+
+    // Aynı dersin (CourseId) herhangi bir şubesine kayıtlı mı?
+    public boolean isRegisteredToCourse(String courseId) {
+        for (CourseSection section : registeredCourses) {
+            if (section.getCourse().getCourseId().equalsIgnoreCase(courseId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Daha önce aynı şubeye kayıtlı mı? (opsiyonel)
+    public boolean isAlreadyRegisteredToSection(CourseSection section) {
         return registeredCourses.contains(section);
     }
 
+    /**
+     * Zaman çakışması kontrolü:
+     * Yeni şubenin TimeSlot'u, öğrencinin mevcut kayıtlı şubeleriyle çakışıyorsa true döner.
+     */
+    public boolean hasTimeConflict(CourseSection newSection) {
+        if (newSection == null) return false;
+
+        TimeSlot newSlot = newSection.getTimeSlot();
+        if (newSlot == null) return false;
+
+        for (CourseSection existing : registeredCourses) {
+            TimeSlot existingSlot = existing.getTimeSlot();
+            if (existingSlot != null && existingSlot.conflictsWith(newSlot)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Dışarıya güvenli liste dönmek daha iyi
     public List<CourseSection> getRegisteredCourses() {
-        return registeredCourses;
+        return Collections.unmodifiableList(registeredCourses);
+    }
+
+    /**
+     * Arayüz gereksinimi (Registrable):
+     * Ders kaydı davranışını servis üzerinden gerçekleştirir.
+     */
+    @Override
+    public boolean registerCourse(CourseSection section, RegistrationService service) {
+        return service.register(this, section);
+    }
+
+    /**
+     * Arayüz gereksinimi (Registrable):
+     * Ders bırakma davranışını servis üzerinden gerçekleştirir.
+     */
+    @Override
+    public boolean dropCourse(CourseSection section, RegistrationService service) {
+        return service.drop(this, section);
     }
 
     @Override

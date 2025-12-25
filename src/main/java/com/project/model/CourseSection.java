@@ -1,6 +1,7 @@
 package com.project.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CourseSection {
@@ -31,22 +32,45 @@ public class CourseSection {
         return timeSlot;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getEnrolledCount() {
+        return enrolledStudents.size();
+    }
+
+    public List<Student> getEnrolledStudents() {
+        return Collections.unmodifiableList(enrolledStudents);
+    }
+
     public boolean isFull() {
         return enrolledStudents.size() >= capacity;
     }
 
     public boolean enrollStudent(Student student) {
+        // Aynı öğrenci bu şubede zaten varsa tekrar ekleme
+        if (enrolledStudents.contains(student)) {
+            return false;
+        }
+
         if (isFull()) {
             return false;
         }
+
         enrolledStudents.add(student);
         return true;
+    }
+
+    public boolean dropStudent(Student student) {
+        return enrolledStudents.remove(student);
     }
 
     @Override
     public String toString() {
         return course.getCourseId() + " - " + course.getCourseName()
                 + " | " + instructor.getName()
-                + " | " + timeSlot;
+                + " | " + timeSlot
+                + " | Capacity: " + enrolledStudents.size() + "/" + capacity;
     }
 }

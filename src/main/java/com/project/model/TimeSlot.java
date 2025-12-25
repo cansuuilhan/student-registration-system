@@ -28,6 +28,22 @@ public class TimeSlot {
         return endHour;
     }
 
+    /**
+     * Aynı gün ve saat aralığı kesişiyorsa true döner.
+     * Örn: 9-11 ile 10-12 çakışır.
+     */
+    public boolean conflictsWith(TimeSlot other) {
+        if (other == null) return false;
+
+        // Gün farklıysa çakışma yok (case-insensitive)
+        if (!this.day.equalsIgnoreCase(other.day)) {
+            return false;
+        }
+
+        // Saat aralığı çakışma kontrolü: [start, end) kesişimi
+        return this.startHour < other.endHour && other.startHour < this.endHour;
+    }
+
     @Override
     public String toString() {
         return day + " " + startHour + ":00 - " + endHour + ":00";

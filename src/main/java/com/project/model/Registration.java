@@ -3,23 +3,17 @@ package com.project.model;
 import java.time.LocalDate;
 
 /**
- * Registration sınıfı, bir öğrencinin bir derse kaydolmasını temsil eder.
+ * Registration sınıfı, bir öğrencinin bir ders ŞUBESİNE (CourseSection) kaydını temsil eder.
  */
 public class Registration {
 
     private Student student;
-    private Course course;
+    private CourseSection section;
     private LocalDate registrationDate;
 
-    /**
-     * Yeni bir kayıt oluşturur.
-     *
-     * @param student  Kaydı yapan öğrenci
-     * @param course   Kaydolunan ders
-     */
-    public Registration(Student student, Course course) {
+    public Registration(Student student, CourseSection section) {
         this.student = student;
-        this.course = course;
+        this.section = section;
         this.registrationDate = LocalDate.now();
     }
 
@@ -27,8 +21,14 @@ public class Registration {
         return student;
     }
 
+    // Kayıt edilen asıl şey: şube
+    public CourseSection getSection() {
+        return section;
+    }
+
+    // Kolaylık: ders bilgisine direkt erişim
     public Course getCourse() {
-        return course;
+        return section.getCourse();
     }
 
     public LocalDate getRegistrationDate() {
@@ -37,8 +37,7 @@ public class Registration {
 
     @Override
     public String toString() {
-        // HATALI: course.getTitle()
-        // DOĞRUSU: course.getCourseName()
-        return student.getName() + " -> " + course.getCourseName() + " (" + registrationDate + ")";
+        // section.toString() zaten ders + eğitmen + saat bilgilerini içeriyor
+        return student.getName() + " -> " + section + " (" + registrationDate + ")";
     }
 }
