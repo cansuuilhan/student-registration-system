@@ -9,18 +9,38 @@ import java.util.List;
  */
 public class CourseCatalog {
 
-    private List<Course> courses;
+    private final List<Course> courses;
 
     public CourseCatalog() {
         this.courses = new ArrayList<>();
     }
 
-    public void addCourse(Course course) {
+    /**
+     * Aynı courseId varsa eklemeyi engeller.
+     * @return eklendiyse true, zaten varsa false
+     */
+    public boolean addCourse(Course course) {
+        if (course == null || course.getCourseId() == null) return false;
+
+        String id = course.getCourseId().trim();
+        if (id.isEmpty()) return false;
+
+        if (findCourseById(id) != null) return false;
+
         courses.add(course);
+        return true;
     }
 
-    public void removeCourse(String courseId) {
-        courses.removeIf(course -> course.getCourseId().equalsIgnoreCase(courseId));
+    /**
+     * @return silindiyse true, bulunamadıysa false
+     */
+    public boolean removeCourse(String courseId) {
+        if (courseId == null) return false;
+
+        String id = courseId.trim();
+        if (id.isEmpty()) return false;
+
+        return courses.removeIf(course -> course.getCourseId().equalsIgnoreCase(id));
     }
 
     public List<Course> getAllCourses() {
@@ -28,11 +48,20 @@ public class CourseCatalog {
     }
 
     public Course findCourseById(String courseId) {
+        if (courseId == null) return null;
+
+        String id = courseId.trim();
+        if (id.isEmpty()) return null;
+
         for (Course course : courses) {
-            if (course.getCourseId().equalsIgnoreCase(courseId)) {
+            if (course.getCourseId().equalsIgnoreCase(id)) {
                 return course;
             }
         }
         return null;
+    }
+
+    public boolean contains(String courseId) {
+        return findCourseById(courseId) != null;
     }
 }
