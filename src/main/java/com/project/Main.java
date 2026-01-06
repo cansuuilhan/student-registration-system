@@ -44,30 +44,52 @@ public class Main {
     // -----------------------------
     private static void initSystem() {
         service = new RegistrationService();
-        catalog = new CourseCatalog(); // menüden ders listesi kaldırıldı ama sistemde durabilir
+        catalog = new CourseCatalog();
         sections = new ArrayList<>();
 
-        Instructor ins = new Instructor("3001", "Tuğberk Kocatekin", "CE");
+        // --- 3 Öğretmen ---
+        Instructor ins1 = new Instructor("3001", "Tuğberk Kocatekin", "CE");
+        Instructor ins2 = new Instructor("3002", "Mert Yağcıoğlu", "CE");
+        Instructor ins3 = new Instructor("3003", "Pınar Karadayı", "CE");
 
-        Student s1 = new Student("1001", "Cansu", "CE");
-        Student s2 = new Student("1002", "Ayşe", "CE");
-        GraduateStudent gs1 = new GraduateStudent("2001", "Cansu YL", "CE", 5000);
+        // --- 6 Öğrenci (Numaralar artarak) ---
+        // Mezun öğrenci = Cansu
+        GraduateStudent gs1 = new GraduateStudent("220309044", "Cansu", "CE", 5000);
 
-        addUser(s1, "1234");
-        addUser(s2, "1111");
-        addUser(gs1, "9999");
+        Student s2 = new Student("220309045", "Selin", "CE");
+        Student s3 = new Student("220309046", "Emre", "CE");
+        Student s4 = new Student("220309047", "Hayat", "CE");
+        Student s5 = new Student("220309048", "Murat", "CE");
+        Student s6 = new Student("220309049", "Melis", "CE");
 
-        Course ce101 = new Course("CE101", "Nesne Tabanlı Programlama", 4);
-        Course ce102 = new Course("CE102", "Veri Yapıları", 4);
-        Course ce201 = new Course("CE201", "Bilgisayar Ağları", 4);
+        // Şifreler: öğrenci numarasının son 4 hanesi
+        addUser(gs1, "9044");
+        addUser(s2, "9045");
+        addUser(s3, "9046");
+        addUser(s4, "9047");
+        addUser(s5, "9048");
+        addUser(s6, "9049");
 
-        catalog.addCourse(ce101);
-        catalog.addCourse(ce102);
-        catalog.addCourse(ce201);
+        // --- 5 Ders ---
+        Course c1 = new Course("CE201", "İleri Veritabanı", 4);
+        Course c2 = new Course("CE101", "Nesne Programlama", 4);
+        Course c3 = new Course("CE305", "Veri Madenciliği", 4);
+        Course c4 = new Course("CE203", "İşletim Sistemleri", 4);
+        Course c5 = new Course("CE407", "Görüntü İşleme", 4);
 
-        sections.add(new CourseSection(ce101, ins, new TimeSlot("MONDAY", 9, 11), 30));
-        sections.add(new CourseSection(ce102, ins, new TimeSlot("MONDAY", 10, 12), 30));
-        sections.add(new CourseSection(ce201, ins, new TimeSlot("TUESDAY", 13, 15), 1));
+        catalog.addCourse(c1);
+        catalog.addCourse(c2);
+        catalog.addCourse(c3);
+        catalog.addCourse(c4);
+        catalog.addCourse(c5);
+
+        // --- Şubeler (CourseSection) ---
+        // TimeSlot çakışmasını azaltmak için saatleri dağıttım.
+        sections.add(new CourseSection(c2, ins1, new TimeSlot("MONDAY", 9, 11), 3));        // Nesne Programlama - Tuğberk
+        sections.add(new CourseSection(c1, ins2, new TimeSlot("MONDAY", 11, 13), 30));       // İleri Veritabanı - Mert
+        sections.add(new CourseSection(c3, ins3, new TimeSlot("TUESDAY", 10, 12), 30));      // Veri Madenciliği - Pınar
+        sections.add(new CourseSection(c4, ins2, new TimeSlot("WEDNESDAY", 9, 11), 30));     // İşletim Sistemleri - Mert
+        sections.add(new CourseSection(c5, ins3, new TimeSlot("THURSDAY", 13, 15), 30));     // Görüntü İşleme - Pınar
     }
 
     private static void addUser(Student s, String password) {
@@ -118,20 +140,29 @@ public class Main {
 
             int choice = readInt("Seçiminiz: ");
 
+            // Java 8/11 uyumlu klasik switch-case
             switch (choice) {
-                case 1 -> listSections();
-                case 2 -> registerStep(activeStudent);
-                case 3 -> removeCourseStep(activeStudent);
-                case 4 -> showStudentCourses(activeStudent);
-                case 5 -> {
+                case 1:
+                    listSections();
+                    break;
+                case 2:
+                    registerStep(activeStudent);
+                    break;
+                case 3:
+                    removeCourseStep(activeStudent);
+                    break;
+                case 4:
+                    showStudentCourses(activeStudent);
+                    break;
+                case 5:
                     System.out.println("Oturum kapatıldı. Giriş ekranına yönlendiriliyorsunuz.");
                     return true;   // tekrar login
-                }
-                case 0 -> {
+                case 0:
                     System.out.println("Programdan çıkılıyor.");
                     return false;  // tamamen çık
-                }
-                default -> System.out.println("Geçersiz seçim.");
+                default:
+                    System.out.println("Geçersiz seçim.");
+                    break;
             }
 
             pressEnter();
